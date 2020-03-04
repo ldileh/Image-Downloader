@@ -10,6 +10,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        ImageDownloader(this).setPlaceholder(1).start("")
+        //ImageDownloader(this).setPlaceholder(1).start("")
     }
 }
