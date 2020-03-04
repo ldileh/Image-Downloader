@@ -1,0 +1,2 @@
+include ':app', ':imagedownloadmanager'
+rootProject.name='Sample Image Download Manager'
