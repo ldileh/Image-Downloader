@@ -6,6 +6,7 @@ import androidx.annotation.NonNull
 
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
+import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 
@@ -19,6 +20,7 @@ class ImageDownloader(private val context: Context) {
     private var placeholder = -1
     private var errorImage = -1
     private var memoryManagement = false
+    private var useLowQualityImage = true
 
     fun target(imageView: ImageView): ImageDownloader {
         this.imageView = imageView
@@ -56,6 +58,12 @@ class ImageDownloader(private val context: Context) {
         return this
     }
 
+    fun isLowQualityImage(isLowQuality: Boolean): ImageDownloader{
+        this.useLowQualityImage = isLowQuality
+
+        return this
+    }
+
     fun start(url: String) = imageView?.let { getGlide().load(url).into(it) }
 
     fun start(file: File) = imageView?.let { getGlide().load(file).into(it) }
@@ -64,12 +72,12 @@ class ImageDownloader(private val context: Context) {
     private fun getGlide() : RequestManager = glide ?: configureGlide()
 
     @NonNull
-    private fun configureGlide(requestOptions: RequestOptions): RequestManager = Glide
+    private fun configureGlide(requestOptions: RequestOptions): RequestManager = GlideApp
         .with(context)
         .applyDefaultRequestOptions(requestOptions)
 
     @NonNull
-    private fun configureGlide(): RequestManager = Glide
+    private fun configureGlide(): RequestManager = GlideApp
         .with(context)
         .applyDefaultRequestOptions(defaultTransform())
 
@@ -91,6 +99,8 @@ class ImageDownloader(private val context: Context) {
             requestOptions = requestOptions.skipMemoryCache(true)
             requestOptions = requestOptions.diskCacheStrategy(DiskCacheStrategy.NONE)
         }
+
+        requestOptions = if(useLowQualityImage) requestOptions.format(DecodeFormat.PREFER_RGB_565) else requestOptions.format(DecodeFormat.PREFER_ARGB_8888)
 
         return requestOptions
     }
