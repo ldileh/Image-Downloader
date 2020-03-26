@@ -8,6 +8,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 
 import java.io.File
@@ -17,6 +18,9 @@ class ImageDownloader(private val context: Context) {
 
     private var glide: RequestManager? = null
     private var isCircleCrop = false
+    private var isCenterCrop = false
+    private var isRoundedImage = false
+    private var radius = -1
     private var placeholder = -1
     private var errorImage = -1
     private var memoryManagement = false
@@ -36,6 +40,12 @@ class ImageDownloader(private val context: Context) {
 
     fun setCircleCrop(circleCrop: Boolean): ImageDownloader {
         this.isCircleCrop = circleCrop
+
+        return this
+    }
+
+    fun setCenterCrop(centerCrop: Boolean): ImageDownloader {
+        this.isCenterCrop = centerCrop
 
         return this
     }
@@ -64,6 +74,13 @@ class ImageDownloader(private val context: Context) {
         return this
     }
 
+    fun setRoundedImage(radius: Int): ImageDownloader{
+        this.isRoundedImage = true
+        this.radius = radius
+
+        return this
+    }
+
     fun start(url: String) = imageView?.let { getGlide().load(url).into(it) }
 
     fun start(file: File) = imageView?.let { getGlide().load(file).into(it) }
@@ -88,6 +105,12 @@ class ImageDownloader(private val context: Context) {
             requestOptions = requestOptions.centerCrop()
             requestOptions = requestOptions.circleCrop()
         }
+
+        if(isRoundedImage)
+            requestOptions = requestOptions.transform(RoundedCorners(radius))
+
+        if(isCenterCrop)
+            requestOptions = requestOptions.centerCrop()
 
         if (placeholder != -1)
             requestOptions = requestOptions.placeholder(placeholder)
