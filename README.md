@@ -11,7 +11,7 @@ apply plugin: 'kotlin-kapt'
 dependencies {
 ...
 	/* start image downloader */
-	implementation 'com.github.ldileh:Image-Downloader:0.02'
+	implementation 'com.github.ldileh:Image-Downloader:0.03'
 	// glide
 	implementation 'com.github.bumptech.glide:glide:4.11.0'
 	kapt 'com.github.bumptech.glide:compiler:4.11.0'
